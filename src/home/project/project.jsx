@@ -11,7 +11,6 @@ export default function Project({textAlign,widthContainer}) {
     const [widthScreen, setWidthScreen] = useState(window.innerWidth)
     useEffect(() => {
         window.addEventListener("resize", () => {
-            console.log(widthScreen);
             setWidthScreen(() => window.innerWidth)
         })
         return () => window.removeEventListener("resize", () => { })
