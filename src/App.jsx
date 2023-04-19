@@ -21,16 +21,16 @@ function App() {
         <div className='relative'>
 
           <Routes>
-            <Route path='/' exact element={
+            <Route path='/Portfilo/' exact element={
               <>
                 <Home />
                 <Footer />
               </>
             } />
-            <Route path='/about' element={<About />} />
-            <Route path='/tech-stack' element={<TechStack/>} />
-            <Route path='/projects' element={<Projects/>} />
-            <Route path='/contact' element={<Contacts2/>} />
+            <Route path='/Portfilo/about' element={<About />} />
+            <Route path='/Portfilo/tech-stack' element={<TechStack/>} />
+            <Route path='/Portfilo/projects' element={<Projects/>} />
+            <Route path='/Portfilo/contact' element={<Contacts2/>} />
           </Routes>
           <div className='w-full'>
             <div className={`fixed w-4/6 h-full z-50 flex flex-col items-start top-0 duration-300 ${isMenuActive ? "" : "-translate-x-full"} py-3 bg-white dark:bg-darkMode md:hidden`}>
