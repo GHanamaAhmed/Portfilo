@@ -10,15 +10,9 @@ import { fetchSkils, deleteSkil } from "../../redux/skilsReducer"
 import { useAuth0 } from "@auth0/auth0-react"
 export default function Skills({ className }) {
   const [width, setWidth] = useState(window.innerWidth)
-  const [skils, setSkils] = useState([])
   const { isAuthenticated } = useAuth0()
   const skilsReducer = useSelector(state => state.skils)
   const dispatch = useDispatch()
-  useLayoutEffect(() => {
-    dispatch(fetchSkils()).unwrap().then(res => {
-      setSkils(res)
-    }).catch(err => console.error(err))
-  }, [])
   useEffect(() => {
     function handlewidth() {
       setWidth(window.innerWidth)
@@ -26,11 +20,12 @@ export default function Skills({ className }) {
     window.addEventListener("resize", handlewidth)
     return () => window.removeEventListener("resize", () => { })
   }, [])
+  useLayoutEffect(() => {
+    dispatch(fetchSkils()).unwrap().catch(err => console.error(err))
+  }, [])
   const deleteSkil1 = (e) => {
     e.preventDefault()
-    dispatch(deleteSkil(e.currentTarget.src)).unwrap().then(res => {
-      setSkils(prev => prev.filter(e => e != res))
-    }).catch(err => console.log(err))
+    dispatch(deleteSkil(e.currentTarget.src)).unwrap().catch(err => console.error(err))
   }
   return (
     <div className={className}>
@@ -47,9 +42,9 @@ export default function Skills({ className }) {
           prevEl: ".prev"
         }}
       >
-        {!isAuthenticated && skils.map((e, i) => <SwiperSlide key={i} className='content-center flex justify-center'><img crossOrigin='anonymous' src={e} alt="" /></SwiperSlide>)}
+        {!isAuthenticated && skilsReducer.skils.map((e, i) => <SwiperSlide key={i} className='content-center flex justify-center'><img crossOrigin='anonymous' src={e} alt="" /></SwiperSlide>)}
         {
-          isAuthenticated && skils.map((e, i) => <SwiperSlide key={i} className='content-center relative flex items-center justify-center'>
+          isAuthenticated && skilsReducer.skils.map((e, i) => <SwiperSlide key={i} className='content-center relative flex items-center justify-center'>
             <div className='hover:opacity-50'><img onClick={deleteSkil1} className='' crossOrigin='anonymous' src={e} alt="" /></div>
           </SwiperSlide>)
         }

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useReducer, useRef, useState } from 'react'
 import { Modal, Button } from "flowbite-react"
 import { SwiperSlide, Swiper } from 'swiper/react'
 import { Navigation, A11y } from "swiper"
@@ -6,18 +6,24 @@ import axios from "axios"
 import "swiper/css"
 import "swiper/css/navigation"
 import DefaultImages from './defaultImages'
-const postImg = async (file, imgCurrent, img) => {
-    imgCurrent === "file" && await axios.post("http://localhost:3000/tech/addTech", file).then(res => console.log(res.data)).catch(err => console.log(err))
-    imgCurrent === "img" && await axios.post("http://localhost:3000/tech/addTechdefault", {img},{headers:{"Content-Type":"application/x-www-form-urlencoded"}}).then(res => console.log(res.data)).catch(err => console.log(err))
+import { addSkil } from "../redux/skilsReducer";
+import { useDispatch } from "react-redux";
+const initialState = (width, img, imgCurrent) => ({ width, img, imgCurrent })
+const reducer = (state, { type, img, imgCurrent,width }) => {
+    switch (type) {
+        case "generateImg":
+            return {...state,img, imgCurrent}
+        case "handleWidth":
+          return {...state,width}
+    }
 }
 export default memo(function CustomModal({ visible, onShow }) {
-    const [width, setWidth] = useState(window.innerWidth)
-    const [img, setImg] = useState('')
-    const [imgCurrent, setImgCurrent] = useState("file")
+    const [state, dispatche] = useReducer(reducer, initialState(window.innerWidth, " ", "file"))
+    const dispatch = useDispatch()
     const inputImg = useRef()
     useEffect(() => {
         window.addEventListener("resize", () => {
-            setWidth(window.innerWidth)
+            dispatch({type:"handleWidth",width:state.width})
         })
         return () => {
             window.removeEventListener("resize", () => { })
@@ -25,28 +31,26 @@ export default memo(function CustomModal({ visible, onShow }) {
     }, [])
     const generateImg = (e) => {
         e.preventDefault()
-        setImgCurrent("img")
-        setImg(e.currentTarget.src)
+        dispatche({ type: "generateImg", imgCurrent: "img", img: e.currentTarget.src })
     }
     const handleImage = (e) => {
         e.preventDefault()
-        setImgCurrent("file")
         let file = e.currentTarget.files[0]
         let fileReader = new FileReader()
         fileReader.readAsDataURL(file)
         fileReader.addEventListener("loadend", () => {
-            setImg(fileReader.result)
+            dispatche({type: "generateImg",img:fileReader.result,imgCurrent:"file"})
         })
     }
     const addTech = async (e) => {
         e.preventDefault()
         let dataFormat = new FormData()
         let file = inputImg.current.files[0]
-        if (file&&imgCurrent=="file") {
+        if (file && state.imgCurrent == "file") {
             dataFormat.append("img", file)
-            await postImg(dataFormat, imgCurrent, img)
-        }else if (img&&imgCurrent=="img") {
-            await postImg("dataFormat", imgCurrent, img)
+            dispatch(addSkil({ file: dataFormat, imgCurrent:state.imgCurrent, img:state.img })).unwrap().catch(err => console.error(err))
+        } else if (state.img && state.imgCurrent == "img") {
+            dispatch(addSkil({ file: null, imgCurrent:state.imgCurrent, img:state.img })).unwrap().catch(err => console.error(err))
         }
     }
     return (
@@ -80,11 +84,11 @@ export default memo(function CustomModal({ visible, onShow }) {
                             </>
                         </div>
                         <div className='md:col-start-2 md:row-start-1 row-start-3 col-start-1 col-end-3 row-end-3 flex justify-center items-center'>
-                            <img src={img} crossOrigin='anonymous' className='max-h-88 max-w-88' alt='Img' />
+                            <img src={state.img} crossOrigin='anonymous' className='max-h-88 max-w-88' alt='Img' />
                         </div>
                     </div>
                     <div className='mt-3'>
-                        <DefaultImages width={width} onGenerateImg={generateImg} />
+                        <DefaultImages width={state.width} onGenerateImg={generateImg} />
                     </div>
                 </form>
             </Modal.Body>

@@ -1,4 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+const addSkil = createAsyncThunk(
+    "skils/addSkils",
+    async ({ file, imgCurrent, img }, { fulfillWithValue, rejectWithValue }) => {
+        try {
+            let response
+            response =  imgCurrent === "file" ?await fetch("http://localhost:3000/tech/addTech", { method: "POST", body: file }).then((res) => res.json())
+                : await fetch("http://localhost:3000/tech/addTechdefault", { method: "POST", body: `img=${img}`, headers: { "Content-Type": "application/x-www-form-urlencoded" } }).then(res => res.json())
+            if (response.res) {
+                return fulfillWithValue(response.data)
+            }
+            return rejectWithValue(response.mes)
+        } catch (error) {
+            return rejectWithValue(error)
+        }
+    })
 const fetchSkils = createAsyncThunk(
     "skils/fetchSkils",
     async (obj, { rejectWithValue, fulfillWithValue }) => {
@@ -44,7 +59,7 @@ const skilsSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchSkils.fulfilled, (state, { payload }) => {
-            state.skils.push(payload)
+            state.skils = payload
             state.isLoading = false
         }).addCase(fetchSkils.pending, (state) => {
             state.isLoading = true
@@ -52,15 +67,26 @@ const skilsSlice = createSlice({
             state.error = error
             state.isLoading = false
         }).addCase(deleteSkil.fulfilled, (state, { payload }) => {
-            state.skils.filter(e => e != payload)
+            let skils = state.skils
+            state.skils = skils.filter(e => e !== payload)
             state.isLoading = false
         }).addCase(deleteSkil.pending, (state) => {
             state.isLoading = true
         }).addCase(deleteSkil.rejected, (state, { error }) => {
             state.error = error
             state.isLoading = false
+        }).addCase(addSkil.fulfilled, (state, { payload }) => {
+            let skils = state.skils
+            skils.push(payload)
+            state.skils = skils
+            state.isLoading = false
+        }).addCase(addSkil.pending, (state) => {
+            state.isLoading = true
+        }).addCase(addSkil.rejected, (state, { error }) => {
+            state.error = error
+            state.isLoading = false
         })
     }
 })
-export { fetchSkils,deleteSkil }
+export { fetchSkils, deleteSkil,addSkil }
 export default skilsSlice.reducer
