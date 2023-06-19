@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { memo } from 'react'
 import Footer from '../footer/footer'
 import Contacts from '../home/contacts/contacts'
-export default function Contacts2() {
+export default memo( function Contacts2() {
     return (
         <div className='relative h-screen flex flex-col justify-center items-center'>
             <p className='text-solidHeading dark:text-SolidHeadingDarkMode text-4xl font-bold'>For any questions please mail us:</p>
@@ -12,4 +12,4 @@ export default function Contacts2() {
             </footer>
         </div>
     )
-}
+})

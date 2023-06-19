@@ -19,7 +19,6 @@ function App() {
       <BrowserRouter>
         <Header onHandleMenu={handleMenu} />
         <div className='relative'>
-
           <Routes>
             <Route path='/Portfilo/' exact element={
               <>
@@ -28,9 +27,9 @@ function App() {
               </>
             } />
             <Route path='/Portfilo/about' element={<About />} />
-            <Route path='/Portfilo/tech-stack' element={<TechStack/>} />
-            <Route path='/Portfilo/projects' element={<Projects/>} />
-            <Route path='/Portfilo/contact' element={<Contacts2/>} />
+            <Route path='/Portfilo/tech-stack' element={<TechStack />} />
+            <Route path='/Portfilo/projects' element={<Projects />} />
+            <Route path='/Portfilo/contact' element={<Contacts2 />} />
           </Routes>
           <div className='w-full'>
             <div className={`fixed w-4/6 h-full z-50 flex flex-col items-start top-0 duration-300 ${isMenuActive ? "" : "-translate-x-full"} py-3 bg-white dark:bg-darkMode md:hidden`}>
@@ -42,7 +41,7 @@ function App() {
                 <p className='text-darkContent dark:text-lightContent cursor-pointer'>Dark mode</p>
                 <DarkMode />
               </div>
-              <NavBarPages/>
+              <NavBarPages />
             </div>
             <div className={`absolute w-full h-full z-10 right-0 bg-black opacity-30 top-0 ${isMenuActive ? "" : "hidden"}`}></div>
           </div>

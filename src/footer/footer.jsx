@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { memo } from 'react'
 import NavBarPages from '../header/navBarPages'
 import Contact from '../header/contact'
 
-export default function Footer() {
+export default memo(function Footer() {
     return (
         <div className='flex w-full justify-center items-center md:py-10'>
             <div className='flex flex-col md:flex-row justify-between w-10/12'>
@@ -15,4 +15,4 @@ export default function Footer() {
             </div>
         </div>
     )
-}
+})

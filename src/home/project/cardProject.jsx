@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function CardProject({ title, description,img, tech, urlGithub, url }) {
+export default function CardProject({ title, description, img, tech, urlGithub, url }) {
     return (
         <div className='rounded-md w-64 h-400px overflow-hidden flex shadow-2xl flex-col dark:bg-cardDark items-center'>
             <div className='h-2/5 w-full relative img-project'>
@@ -9,12 +9,14 @@ export default function CardProject({ title, description,img, tech, urlGithub, u
                     <p className='text-white underline'>View more</p>
                 </div>
             </div>
-            <div className='w-11/12 h-3/5 flex flex-col justify-between pb-5 pt-2 items-center gap-1'>
-                <p className='text-xl font-bold dark:text-SolidHeadingDarkMode'>{title}</p>
-                <p className='text-sm text-justify text-darkContent dark:text-SolidHeadingDarkMode'>{description}</p>
-                <div>
-                    <p className='inline font-semibold text-solidHeading dark:text-SolidHeadingDarkMode'>Tech stack : </p>
-                    <p className='inline text-darkContent text-xs dark:text-SolidHeadingDarkMode'>{tech}</p>
+            <div className='w-11/12 h-3/5 grid grid-cols-1 grid-rows-6 pb-5 pt-2 gap-1'>
+                <div className='row-start-1 row-end-6'>
+                    <p className='text-xl font-bold text-center dark:text-SolidHeadingDarkMode'>{title}</p>
+                    <p className='text-sm text-justify text-darkContent dark:text-SolidHeadingDarkMode'>{description}</p>
+                    <div className='w-full text-start'>
+                        <p className='inline font-semibold text-solidHeading dark:text-SolidHeadingDarkMode'>Tech stack : </p>
+                        <p className='inline text-darkContent text-xs dark:text-SolidHeadingDarkMode'>{tech}</p>
+                    </div>
                 </div>
                 <div className='flex justify-between w-full'>
                     <div className='flex items-center gap-2'>

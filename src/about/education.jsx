@@ -2,11 +2,11 @@ import { useAuth0 } from '@auth0/auth0-react'
 import axios from 'axios'
 import React, { memo, useEffect, useRef, useState } from 'react'
 
-export default memo( function WorkExperience({ skill, adress, location, dateBegin, dateEnd, typeEmployment, id, onDelete,onEdite }) {
+export default memo( function Education({ specialization, adress, school, location, dateBegin, dateEnd, type, id, onDelete, onEdite }) {
     const { isAuthenticated } = useAuth0()
     const [displayEdite, setDisplayEdite] = useState("hidden")
     const job = useRef()
-    const type = useRef()
+    const type1 = useRef()
     const company = useRef()
     const location1 = useRef()
     const startDate = useRef()
@@ -26,11 +26,11 @@ export default memo( function WorkExperience({ skill, adress, location, dateBegi
         }
     }
     const showEdite = (e) => {
-       e&& e.preventDefault()
+        e && e.preventDefault()
         setDisplayEdite("")
     }
     const hideEdite = (e) => {
-       e&& e.preventDefault()
+        e && e.preventDefault()
         setDisplayEdite("hidden")
     }
     useEffect(() => {
@@ -44,7 +44,7 @@ export default memo( function WorkExperience({ skill, adress, location, dateBegi
     }, [displayEdite])
     const deleteWorkExperience = async (e) => {
         e.preventDefault()
-        await axios.delete("http://localhost:3000/about/workExperience", {
+        await axios.delete("http://localhost:3000/about/education", {
             data: {
                 id
             },
@@ -56,27 +56,27 @@ export default memo( function WorkExperience({ skill, adress, location, dateBegi
             res.status == 200 && onDelete(id)
         }).catch(err => { console.log(err); })
     }
-    const editeWorkExperience = async(e) => {
+    const editeWorkExperience = async (e) => {
         e.preventDefault()
-        const workExperience = {
-            job: job.current.value,
-            type: type.current.value,
-            company: company.current.value,
-            location: location1.current.value,
-            datebegin: startDate.current.value,
-            dateEnd: endDate.current.value
+        const education = {
+            specialization: job.current.value,
+            type: type1.current.value||" ",
+            school: company.current.value||" ",
+            location: location1.current.value||" ",
+            datebegin: startDate.current.value||" ",
+            dateEnd: endDate.current.value||" "
         }
-        await axios.put("http://localhost:3000/about/workExperience", {id:id,workExperience:workExperience },
-        {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }).then(response => {
-            response.status == 200 && onEdite(id,workExperience)
-            response.status == 200 && hideEdite()
-        }).catch((err) => {
-            console.log(err);
-        })
+        await axios.put("http://localhost:3000/about/education", { id: id, education: education },
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                }
+            }).then(response => {
+                response.status == 200 && onEdite(id, education)
+                response.status == 200 && hideEdite()
+            }).catch((err) => {
+                console.log(err);
+            })
     }
     if (isAuthenticated && displayEdite == "") {
 
@@ -84,8 +84,8 @@ export default memo( function WorkExperience({ skill, adress, location, dateBegi
             <>
                 <div className='w-full flex flex-col gap-2 py-4 border-b-2 dark:border-lightContent'>
                     <div className='w-full flex gap-y-3 mb-2 flex-col md:flex-row justify-between md:items-center'>
-                        <input ref={job} defaultValue={skill} type='text' className='text-darkContent outline-none border-none focus:border focus:ring-0 focus:border-lightContent p-0 m-0  bg-transparent dark:text-lightContent text-md' />
-                        <input ref={type} type='text' defaultValue={typeEmployment} className='outline-none focus:ring-0 bg-buttonSuccess text-buttonText rounded-full font-semibold border-none p-0 m-0 h-fit dark:text-lightContent text-md' />
+                        <input ref={job} defaultValue={specialization} type='text' className='text-darkContent outline-none border-none focus:border focus:ring-0 focus:border-lightContent p-0 m-0  bg-transparent dark:text-lightContent text-md' />
+                        <input ref={type1} type='text' defaultValue={type} className='outline-none focus:ring-0 bg-buttonSuccess text-buttonText rounded-full font-semibold border-none p-0 m-0 h-fit dark:text-lightContent text-md' />
                     </div>
                     <div className='w-full flex gap-y-2 flex-col md:flex-row justify-between'>
                         <div className='flex md:gap-x-10'>
@@ -102,7 +102,7 @@ export default memo( function WorkExperience({ skill, adress, location, dateBegi
                                         d="M4 4C4 2.89543 4.89543 2 6 2H14C15.1046 2 16 2.89543 16 4V16C16.5523 16 17 16.4477 17 17C17 17.5523 16.5523 18 16 18H13C12.4477 18 12 17.5523 12 17V15C12 14.4477 11.5523 14 11 14H9C8.44772 14 8 14.4477 8 15V17C8 17.5523 7.55228 18 7 18H4C3.44772 18 3 17.5523 3 17C3 16.4477 3.44772 16 4 16V4ZM7 5H9V7H7V5ZM9 9H7V11H9V9ZM11 5H13V7H11V5ZM13 9H11V11H13V9Z"
                                     />{" "}
                                 </svg>
-                                <input type='text' defaultValue={adress} ref={company} className='text-darkContent focus:ring-0 border-none outline-none p-0 m-0 w-fit h-fit bg-transparent dark:text-lightContent text-md' />
+                                <input type='text' defaultValue={school} ref={company} className='text-darkContent focus:ring-0 border-none outline-none p-0 m-0 w-fit h-fit bg-transparent dark:text-lightContent text-md' />
                             </div>
                             {<div className='flex gap-1'>
                                 <svg
@@ -165,27 +165,27 @@ export default memo( function WorkExperience({ skill, adress, location, dateBegi
         <>
             <div className='w-full flex flex-col gap-2 py-4 border-b-2 dark:border-lightContent' onClick={showEdite}>
                 <div className='w-full flex gap-y-3 mb-2 flex-col md:flex-row justify-between md:items-center'>
-                    {skill && <p className='text-darkContent dark:text-lightContent text-lg'>{skill}</p>}
-                    {typeEmployment && <div className='py-1 px-3 bg-buttonSuccess w-fit text-buttonText rounded-full font-semibold'>{typeEmployment}</div>}
+                    {specialization && <p className='text-darkContent dark:text-lightContent text-lg'>{specialization}</p>}
+                    {type && <div className='py-1 px-3 bg-buttonSuccess w-fit text-buttonText rounded-full font-semibold'>{type}</div>}
                 </div>
                 <div className='w-full flex gap-y-2 flex-col md:flex-row justify-between'>
                     <div className='flex md:gap-x-10'>
-                        {adress && <div className='flex gap-1'>
-                            <svg
-                                className='w-6 h-6 fill-lightContent dark:fill-darkContent'
-                                viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                {" "}
-                                <path
-                                    fillRule="evenodd"
-                                    clipRule="evenodd"
-                                    d="M4 4C4 2.89543 4.89543 2 6 2H14C15.1046 2 16 2.89543 16 4V16C16.5523 16 17 16.4477 17 17C17 17.5523 16.5523 18 16 18H13C12.4477 18 12 17.5523 12 17V15C12 14.4477 11.5523 14 11 14H9C8.44772 14 8 14.4477 8 15V17C8 17.5523 7.55228 18 7 18H4C3.44772 18 3 17.5523 3 17C3 16.4477 3.44772 16 4 16V4ZM7 5H9V7H7V5ZM9 9H7V11H9V9ZM11 5H13V7H11V5ZM13 9H11V11H13V9Z"
-                                />{" "}
-                            </svg>
-                            <p className='text-darkContent dark:text-lightContent text-sm md:text-base'>{adress}</p>
-                        </div>}
-                        {location && <div className='flex gap-1'>
+                        {school && <div className='flex md:gap-x-10'>
+                            {school && <div className='flex gap-1'>
+                                <svg
+                                    className='w-6 h-6 fill-lightContent dark:fill-darkContent'
+                                    viewBox="0 0 20 20"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    {" "}
+                                    <path
+                                        fillRule="evenodd"
+                                        clipRule="evenodd"
+                                        d="M4 4C4 2.89543 4.89543 2 6 2H14C15.1046 2 16 2.89543 16 4V16C16.5523 16 17 16.4477 17 17C17 17.5523 16.5523 18 16 18H13C12.4477 18 12 17.5523 12 17V15C12 14.4477 11.5523 14 11 14H9C8.44772 14 8 14.4477 8 15V17C8 17.5523 7.55228 18 7 18H4C3.44772 18 3 17.5523 3 17C3 16.4477 3.44772 16 4 16V4ZM7 5H9V7H7V5ZM9 9H7V11H9V9ZM11 5H13V7H11V5ZM13 9H11V11H13V9Z"
+                                    />{" "}
+                                </svg>
+                                <p className='text-darkContent dark:text-lightContent text-sm md:text-base'>{school}</p>
+                            </div>}
                             <svg
                                 className='h-6 w-6 fill-none stroke-lightContent dark:stroke-darkContent'
                                 xmlns="http://www.w3.org/2000/svg"

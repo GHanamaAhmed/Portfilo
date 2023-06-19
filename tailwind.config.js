@@ -3,14 +3,19 @@ export default {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
+    'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'
   ],
   theme: {
     extend: {
-      height:{
-        "400px":"400px"
+      height: {
+        "400px": "400px"
       },
       maxWidth: {
         '14': '100%',
+        "88":"88px"
+      },
+      maxHeight:{
+        "88":"88px"
       },
       colors: {
         transparent: 'transparent',
@@ -23,12 +28,12 @@ export default {
         'buttonSuccess': '#D7FFE0',
         "darkMode": '#191919',
         "textLight": '#d9d9d9',
-        "cardDark":"#363636",
-        "darkModeSecondary":"#141414",
+        "cardDark": "#363636",
+        "darkModeSecondary": "#141414",
       },
     },
   },
-  plugins: [],
+  plugins: [require('flowbite/plugin')],
   darkMode: "class"
 }
 
