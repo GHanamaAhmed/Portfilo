@@ -1,7 +1,9 @@
 import axios from 'axios'
 import React, { memo, useEffect, useRef } from 'react'
-
-export default memo( function WorkExperienceAdd({ onClose,onAddworkExperience }) {
+import { addWorkExperience } from "../redux/aboutReducer";
+import {useDispatch} from 'react-redux';
+export default memo( function WorkExperienceAdd({ onClose }) {
+    const dispatch=useDispatch()
     const job = useRef()
     const type = useRef()
     const company = useRef()
@@ -33,17 +35,7 @@ export default memo( function WorkExperienceAdd({ onClose,onAddworkExperience })
             datebegin: startDate.current.value,
             dateEnd: endDate.current.value
         }
-        await axios.post("http://localhost:3000/about/workExperience", {workExperience:workExperience },
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            }).then(response => {
-                response.status == 200 && onAddworkExperience(response.data.workExperience)
-                response.status == 200 && onClose()
-            }).catch((err) => {
-                console.log(err);
-            })
+        dispatch(addWorkExperience(workExperience)).unwrap().then(res=> onClose()).catch(err=>console.error(err))
     }
     useEffect(() => {
         setWidth(job)

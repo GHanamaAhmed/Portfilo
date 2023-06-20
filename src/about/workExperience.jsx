@@ -1,10 +1,12 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import axios from 'axios'
 import React, { memo, useEffect, useRef, useState } from 'react'
-
-export default memo( function WorkExperience({ skill, adress, location, dateBegin, dateEnd, typeEmployment, id, onDelete,onEdite }) {
+import { useDispatch } from "react-redux";
+import { editWorkExperience, deleteWorkExperiance } from "../redux/aboutReducer";
+export default memo(function WorkExperience({ skill, adress, location, dateBegin, dateEnd, typeEmployment, id, onDelete }) {
     const { isAuthenticated } = useAuth0()
     const [displayEdite, setDisplayEdite] = useState("hidden")
+    const dispatch = useDispatch()
     const job = useRef()
     const type = useRef()
     const company = useRef()
@@ -26,11 +28,11 @@ export default memo( function WorkExperience({ skill, adress, location, dateBegi
         }
     }
     const showEdite = (e) => {
-       e&& e.preventDefault()
+        e && e.preventDefault()
         setDisplayEdite("")
     }
     const hideEdite = (e) => {
-       e&& e.preventDefault()
+        e && e.preventDefault()
         setDisplayEdite("hidden")
     }
     useEffect(() => {
@@ -44,19 +46,12 @@ export default memo( function WorkExperience({ skill, adress, location, dateBegi
     }, [displayEdite])
     const deleteWorkExperience = async (e) => {
         e.preventDefault()
-        await axios.delete("http://localhost:3000/about/workExperience", {
-            data: {
-                id
-            },
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            }
-        }).then(res => {
-            console.log(res);
-            res.status == 200 && onDelete(id)
-        }).catch(err => { console.log(err); })
+        dispatch(deleteWorkExperiance({ id }))
+            .unwrap()
+            .then(res => onDelete(id))
+            .catch(err => console.error(err))
     }
-    const editeWorkExperience = async(e) => {
+    const editeWorkExperience = async (e) => {
         e.preventDefault()
         const workExperience = {
             job: job.current.value,
@@ -66,17 +61,11 @@ export default memo( function WorkExperience({ skill, adress, location, dateBegi
             datebegin: startDate.current.value,
             dateEnd: endDate.current.value
         }
-        await axios.put("http://localhost:3000/about/workExperience", {id:id,workExperience:workExperience },
-        {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }).then(response => {
-            response.status == 200 && onEdite(id,workExperience)
-            response.status == 200 && hideEdite()
-        }).catch((err) => {
-            console.log(err);
-        })
+        dispatch(editWorkExperience({ id: id, workExperience: workExperience }))
+            .unwrap()
+            .then(res => hideEdite())
+            .catch(err => console.log(err))
+
     }
     if (isAuthenticated && displayEdite == "") {
 

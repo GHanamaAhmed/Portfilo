@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, lazy, Suspense } from 'react'
 import Header from './header/header'
 import Home from './home/home'
 import DarkMode from './header/darkMode'
 import Footer from './footer/footer'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import About from './about/about'
-import TechStack from './techStack/techStack'
-import Projects from './projects/projects'
-import Contacts2 from './contacts/contacts'
+const About = lazy(() => import("./about/about"))
+const TechStack = lazy(() => import("./techStack/techStack"))
+const Projects = lazy(() => import("./projects/projects"))
+const Contacts2 = lazy(() => import('./contacts/contacts'))
 import NavBarPages from './header/navBarPages'
 function App() {
   const [isMenuActive, setIsMenuActive] = useState(false)
@@ -26,10 +26,10 @@ function App() {
                 <Footer />
               </>
             } />
-            <Route path='/Portfilo/about' element={<About />} />
-            <Route path='/Portfilo/tech-stack' element={<TechStack />} />
-            <Route path='/Portfilo/projects' element={<Projects />} />
-            <Route path='/Portfilo/contact' element={<Contacts2 />} />
+            <Route path='/Portfilo/about' element={<Suspense fallback="lading"><About /></Suspense>} />
+            <Route path='/Portfilo/tech-stack' element={<Suspense fallback="loading"><TechStack /></Suspense>} />
+            <Route path='/Portfilo/projects' element={<Suspense fallback="loading"><Projects /></Suspense>} />
+            <Route path='/Portfilo/contact' element={<Suspense fallback="loading"><Contacts2 /></Suspense>} />
           </Routes>
           <div className='w-full'>
             <div className={`fixed w-4/6 h-full z-50 flex flex-col items-start top-0 duration-300 ${isMenuActive ? "" : "-translate-x-full"} py-3 bg-white dark:bg-darkMode md:hidden`}>

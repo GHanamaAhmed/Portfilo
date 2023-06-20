@@ -1,7 +1,10 @@
 import axios from 'axios'
 import React, { memo, useEffect, useRef } from 'react'
 
-export default memo( function EducationAdd({ onClose,onAddEducation }) {
+import { useDispatch } from "react-redux";
+import { addEducation} from "../redux/aboutReducer";
+export default memo( function EducationAdd({ onClose }) {
+    const dispatch=useDispatch()
     const job = useRef()
     const type = useRef()
     const company = useRef()
@@ -33,17 +36,7 @@ export default memo( function EducationAdd({ onClose,onAddEducation }) {
             datebegin: startDate.current.value,
             dateEnd: endDate.current.value
         }
-        await axios.post("http://localhost:3000/about/education", {education:education },
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                }
-            }).then(response => {
-                response.status == 200 && onAddEducation(response.data.education)
-                response.status == 200 && onClose()
-            }).catch((err) => {
-                console.log(err);
-            })
+        dispatch(addEducation({education})).unwrap().then(res=> onClose()).catch(err=>console.error(err))
     }
     useEffect(() => {
         setWidth(job)

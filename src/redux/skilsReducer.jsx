@@ -17,6 +17,7 @@ const addSkil = createAsyncThunk(
 const fetchSkils = createAsyncThunk(
     "skils/fetchSkils",
     async (obj, { rejectWithValue, fulfillWithValue }) => {
+        await new Promise(resolve=>setTimeout(resolve,1000))
         try {
             const response = await fetch("http://localhost:3000/tech", {
                 method: "GET"
@@ -54,7 +55,8 @@ const skilsSlice = createSlice({
     name: "skils",
     initialState: {
         skils: [],
-        isLoading: false,
+        isLoading: true,
+        isEditing:false,
         error: undefined
     },
     extraReducers: (builder) => {
@@ -69,22 +71,22 @@ const skilsSlice = createSlice({
         }).addCase(deleteSkil.fulfilled, (state, { payload }) => {
             let skils = state.skils
             state.skils = skils.filter(e => e !== payload)
-            state.isLoading = false
+            state.isEditing = false
         }).addCase(deleteSkil.pending, (state) => {
-            state.isLoading = true
+            state.isEditing = true
         }).addCase(deleteSkil.rejected, (state, { error }) => {
             state.error = error
-            state.isLoading = false
+            state.isEditing = false
         }).addCase(addSkil.fulfilled, (state, { payload }) => {
             let skils = state.skils
             skils.push(payload)
             state.skils = skils
-            state.isLoading = false
+            state.isEditing = false
         }).addCase(addSkil.pending, (state) => {
-            state.isLoading = true
+            state.isEditing = true
         }).addCase(addSkil.rejected, (state, { error }) => {
             state.error = error
-            state.isLoading = false
+            state.isEditing = false
         })
     }
 })

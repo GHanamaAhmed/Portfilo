@@ -5,71 +5,26 @@ import { useAuth0 } from "@auth0/auth0-react"
 import axios from 'axios'
 import WorkExperienceEdit from './workExperienceAdd'
 import AboutMe from './aboutMe'
-import Education from './education'
+import Education, { LoadingEducation } from './education'
 import EducationAdd from './educationAdd'
+import { useSelector, useDispatch } from "react-redux";
+import { fetchAbout } from "../redux/aboutReducer";
 export default memo(function About() {
     const { isAuthenticated } = useAuth0()
-    const [about, setAbout] = useState()
-    const [experience, setExperience] = useState()
-    const [education, setEducation] = useState()
+    const {experience,education} = useSelector(state => state.about)
+    const dispatch = useDispatch()
     const [isEditExperience, setIsEditExperience] = useState(false)
     const [isEditeducation, setIsEditEducation] = useState(false)
     useEffect(() => {
-        const getAbout = async () => {
-            await axios.get('http://localhost:3000/about').then(res => {
-                setAbout(res.data.aboutMe)
-                setExperience(res.data.workExperience)
-                setEducation(res.data.education)
-            })
-        }
-        getAbout()
+        dispatch(fetchAbout()).unwrap().catch(err => console.error(err))
     }, [])
-    const onAddworkExperience = useCallback((value) => {
-        setExperience(prevValue => [...prevValue, value])
-    }, [setExperience])
-    const onDeleteWorkExperience = useCallback((id) => {
-        setExperience(prevValue => prevValue.filter(e => e["_id"] != id))
-    }, [setExperience])
-    const onEditeWorkExperience = useCallback((id, newValue) => {
-        setExperience(prevValue => prevValue.map(e => {
-            if (e["_id"] != id) {
-                return e
-            }
-            e = {
-                ...newValue,
-            }
-            e["_id"] = id
-            return e
-        }))
-    }, [setExperience])
-    const onAddEducaion = useCallback((value) => {
-        setEducation(prevValue => [...prevValue, value])
-    }, [setEducation])
-    const onDeleteeducation = useCallback((id) => {
-        setEducation(prevValue => prevValue.filter(e => e["_id"] != id))
-    }, [setEducation])
-    const onEditeeducation = useCallback((id, newValue) => {
-        setEducation(prevValue => prevValue.map(e => {
-            if (e["_id"] != id) {
-                return e
-            }
-            e = {
-                ...newValue,
-            }
-            e["_id"] = id
-            return e
-        }))
-    }, [setEducation])
-    const onEditeAboutME = useCallback((newvalue) => {
-        setAbout(prevValue => [{ text: newvalue }])
-    }, [setAbout])
     //onEdite
     return (
         <div className='flex items-center justify-center w-full gap-3 py-24 md:py-28'>
             <div className='w-10/12 flex justify-start items-center gap-4'>
                 <div className='flex flex-col gap-4 w-full md:w-2/3'>
-                    <AboutMe about={about} onEdite={onEditeAboutME} />
-                    {experience && <>
+                    <AboutMe/>
+                    {(experience === undefined || experience?.length > 0) && <>
                         {(isAuthenticated || experience != false) && <TitleSection title={"Work Experience"} textAlign={"items-start"} />}
                         {isAuthenticated && !isEditExperience && <div className='flex justify-center items-center'>
                             <svg
@@ -104,19 +59,16 @@ export default memo(function About() {
                             </svg>
 
                         </div>}
-                        {isEditExperience && <WorkExperienceEdit onAddworkExperience={onAddworkExperience} onClose={() => setIsEditExperience((prev) => !prev)} />}
+                        {isEditExperience && <WorkExperienceEdit onClose={() => setIsEditExperience((prev) => !prev)} />}
                         <div className='flex flex-col gap-3 max-h-screen overflow-auto'>
-                            {experience.map((item, index) => {
+                            {experience === undefined && [...Array(2)].map((e, i) => <LoadingEducation key={i} />)}
+                            {experience?.map((item, index) => {
                                 return (
-                                    <WorkExperience key={index} id={`${item["_id"]}`} skill={item.job} typeEmployment={item.type} adress={item.company} location={item.location} dateBegin={item.datebegin} dateEnd={item.dateEnd} onDelete={onDeleteWorkExperience} onEdite={onEditeWorkExperience} />)
+                                    <WorkExperience key={index} id={`${item["_id"]}`} skill={item.job} typeEmployment={item.type} adress={item.company} location={item.location} dateBegin={item.datebegin} dateEnd={item.dateEnd}/>)
                             })}
                         </div>
                     </>}
-
-
-
-
-                    {education && <>
+                    {(education === undefined || education?.length > 0) && <>
                         {(isAuthenticated || education != false) && <TitleSection title={"Work Experience"} textAlign={"items-start"} />}
                         {isAuthenticated && !isEditeducation && <div className='flex justify-center items-center'>
                             <svg
@@ -151,11 +103,12 @@ export default memo(function About() {
                             </svg>
 
                         </div>}
-                        {isEditeducation && <EducationAdd onAddEducation={onAddEducaion} onClose={() => setIsEditEducation((prev) => !prev)} />}
+                        {isEditeducation && <EducationAdd onClose={() => setIsEditEducation((prev) => !prev)} />}
                         <div className='flex flex-col gap-3 max-h-screen overflow-auto'>
-                            {education.map((item, index) => {
+                            {education === undefined && [...Array(2)].map((e, i) => <LoadingEducation key={i} />)}
+                            {education?.map((item, index) => {
                                 return (
-                                    <Education key={index} id={`${item["_id"]}`} specialization={item.specialization} type={item.type} school={item.school} location={item.location} dateBegin={item.datebegin} dateEnd={item.dateEnd} onDelete={onDeleteeducation} onEdite={onEditeeducation} />)
+                                    <Education key={index} id={`${item["_id"]}`} specialization={item.specialization} type={item.type} school={item.school} location={item.location} dateBegin={item.datebegin} dateEnd={item.dateEnd}/>)
                             })}
                         </div>
                     </>}

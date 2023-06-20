@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit"
-import skilsSlice from '../redux/skilsReducer'
+import skilsSlice from './skilsReducer'
+import aboutSlice from "./aboutReducer";
 const store = configureStore(
     {
         reducer:{
-            skils:skilsSlice
+            skils:skilsSlice,
+            about:aboutSlice
         }
     }
 )
