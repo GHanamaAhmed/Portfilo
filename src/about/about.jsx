@@ -1,8 +1,7 @@
-import React, { memo, useCallback, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import WorkExperience from './workExperience'
 import TitleSection from '../home/titleSection'
 import { useAuth0 } from "@auth0/auth0-react"
-import axios from 'axios'
 import WorkExperienceEdit from './workExperienceAdd'
 import AboutMe from './aboutMe'
 import Education, { LoadingEducation } from './education'
