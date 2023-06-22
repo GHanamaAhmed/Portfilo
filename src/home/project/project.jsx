@@ -3,7 +3,6 @@ import TitleSection from '../titleSection'
 import CardProject from './cardProject'
 import { Navigation, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { useEffect, useState } from 'react';

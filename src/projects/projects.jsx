@@ -1,5 +1,4 @@
 import React, { memo } from 'react'
-import TitleSection from '../home/titleSection'
 import Project from '../home/project/project'
 export default memo( function Projects() {
     return (
